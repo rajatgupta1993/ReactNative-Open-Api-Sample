@@ -39,12 +39,7 @@ export function doWithLoader(props, apiFunc, callback) {
                 }
             },
             (error) => {
-                const { ErrorInfo, Message } = error.response;
-                if (ErrorInfo) {
-                    props.setErrMessage(ErrorInfo.Message);
-                } else if (Message) {
-                    props.setErrMessage(Message);
-                }
+                setGlobalErrMessage(props, error);
             })
             .catch(() => props.showError())
             .then(() => props.hideLoader());
@@ -64,12 +59,7 @@ export function doWithLoaderAll(props, apiFunc, onSuccessApiFunc, callback, next
                 const intermediate = result;
                 return Promise.all([onSuccessApiFunc(), intermediate]);
             }, (error) => {
-                const { ErrorInfo, Message } = error.response;
-                if (ErrorInfo) {
-                    props.setErrMessage(ErrorInfo.Message);
-                } else if (Message) {
-                    props.setErrMessage(Message);
-                }
+                setGlobalErrMessage(props, error);
             }).then(([result, intermediate]) => {
                 if (callback) {
                     callback(intermediate);
@@ -78,16 +68,22 @@ export function doWithLoaderAll(props, apiFunc, onSuccessApiFunc, callback, next
                     nextCallback(result);
                 }
             }, (error) => {
-                const { ErrorInfo, Message } = error.response;
-                if (ErrorInfo) {
-                    props.setErrMessage(ErrorInfo.Message);
-                } else if (Message) {
-                    props.setErrMessage(Message);
-                }
+                setGlobalErrMessage(props, error);
             }).catch(() => props.showError())
             .then(() => props.hideLoader());
     } else {
         props.showError();
         props.hideLoader();
+    }
+}
+
+export function setGlobalErrMessage(props, error) {
+    const { ErrorInfo, Message } = error.response;
+    if (ErrorInfo) {
+        props.setErrMessage(ErrorInfo.Message);
+    } else if (Message) {
+        props.setErrMessage(Message);
+    } else {
+        props.setErrMessage('Some error has occured.');
     }
 }

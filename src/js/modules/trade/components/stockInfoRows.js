@@ -10,49 +10,46 @@ function showStockData(props) {
     const length = props.length;
     switch (length) {
         case '2': return stockInfoForTwoData(props);
-            break;
 
         case '3': return stockInfoForThreeData(props);
-            break;
 
         case '4': return stockInfoForFourData(props);
-            break;
 
         default:
-
+            break;
     }
 }
 
-function stockInfoForTwoData({ text, data1, data2 }) {
+function stockInfoForTwoData({ text, firstColData, secondColData }) {
     return (
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={Stylesheet.searchInstrumentRowMinorText}>{data1}</Text>
-                <Text style={[text ? Stylesheet.Text12BoldWhite : Stylesheet.searchInstrumentRowMinorText, { fontSize: 11 }]}>{data2}</Text>
+                <Text style={Stylesheet.searchInstrumentRowMinorText}>{firstColData}</Text>
+                <Text style={[text ? Stylesheet.smallWhiteText : Stylesheet.searchInstrumentRowMinorText, { fontSize: 11 }]}>{secondColData}</Text>
             </View>
         </View>
     );
 
 }
 function stockInfoForThreeData(props) {
-    const { data1, data2, data3, netChangeColor, style, margin } = props;
+    const { firstColData, secondColData, thirdColData, netChangeColor, style, margin } = props;
 
     return (<View style={[Stylesheet.searchInstrumentRow, {
         flexDirection: 'row', backgroundColor: '#000', borderWidth: 0, marginTop: margin ? -10 : 0,
     }]}
     >
         <View style={[Stylesheet.XCenter, Stylesheet.YCenter, Stylesheet.FlexOne, { alignItems: 'flex-start' }]}>
-            <Text style={[Stylesheet.Text12BoldWhite, style ? Stylesheet.searchInstrumentRowMinorText : null]}>{data1}</Text>
+            <Text style={[Stylesheet.smallWhiteText, style ? Stylesheet.searchInstrumentRowMinorText : null]}>{firstColData}</Text>
         </View>
 
         <View style={[Stylesheet.XCenter, Stylesheet.YCenter, Stylesheet.FlexOne]}>
-            <Text style={[Stylesheet.Text12BoldWhite, { color: netChangeColor ? props.netChangeColor : '#fff', alignSelf: 'center' },
+            <Text style={[Stylesheet.smallWhiteText, { color: netChangeColor ? props.netChangeColor : '#fff', alignSelf: 'center' },
                 props.style ? Stylesheet.searchInstrumentRowMinorText : null]}
-            >{data2}</Text>
+            >{secondColData}</Text>
         </View>
 
         <View style={[Stylesheet.XCenter, Stylesheet.YCenter, Stylesheet.FlexOne, { alignItems: 'flex-end' }]}>
-            <Text style={[Stylesheet.Text12BoldWhite, style ? Stylesheet.searchInstrumentRowMinorText : null]}>{data3}</Text>
+            <Text style={[Stylesheet.smallWhiteText, style ? Stylesheet.searchInstrumentRowMinorText : null]}>{thirdColData}</Text>
         </View>
 
     </View>);
@@ -60,18 +57,18 @@ function stockInfoForThreeData(props) {
 }
 
 function stockInfoForFourData(props) {
-    const { data1, data2, data3, data4, text } = props;
+    const { firstColData, secondColData, thirdColData, fourthColData, text } = props;
     return (
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', paddingVertical: 4 }]}>
 
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginRight: 5 }}>
-                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.Text12BoldWhite}>{data1}</Text>
-                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.Text12BoldWhite}>{data2}</Text>
+                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.smallWhiteText}>{firstColData}</Text>
+                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.smallWhiteText}>{secondColData}</Text>
             </View>
 
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginLeft: 5 }}>
-                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.Text12BoldWhite}>{data3}</Text>
-                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.Text12BoldWhite}>{data4}</Text>
+                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.smallWhiteText}>{thirdColData}</Text>
+                <Text style={text ? Stylesheet.searchInstrumentRowMinorText : Stylesheet.smallWhiteText}>{fourthColData}</Text>
             </View>
 
         </View>
@@ -79,7 +76,6 @@ function stockInfoForFourData(props) {
 }
 
 function stockInfoRows(props) {
-
     return (
         <View>
             {showStockData(props)}
@@ -92,24 +88,24 @@ stockInfoRows.propTypes = {
 
 stockInfoForTwoData.propTypes = {
     text: PropTypes.bool,
-    data1: PropTypes.string,
-    data2: PropTypes.string,
+    firstColData: PropTypes.string,
+    secondColData: PropTypes.string,
 };
 
 stockInfoForThreeData.propTypes = {
-    data1: PropTypes.string,
-    data2: PropTypes.string,
-    data3: PropTypes.string,
+    firstColData: PropTypes.string,
+    secondColData: PropTypes.string,
+    thirdColData: PropTypes.string,
     netChangeColor: PropTypes.string,
     style: PropTypes.bool,
     margin: PropTypes.bool,
 };
 
 stockInfoForFourData.propTypes = {
-    data1: PropTypes.string,
-    data2: PropTypes.string,
-    data3: PropTypes.string,
-    data4: PropTypes.string,
+    firstColData: PropTypes.string,
+    secondColData: PropTypes.string,
+    thirdColData: PropTypes.string,
+    fourthColData: PropTypes.string,
     text: PropTypes.bool,
 };
 

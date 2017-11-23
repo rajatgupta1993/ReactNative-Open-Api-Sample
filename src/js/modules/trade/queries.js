@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { doWithLoader } from '../../utils/global';
 import { getInfoPrices, placeOrder, getAccountInfo, searchInstruments,
     getInstrumentDetails, subscribePrices, removeIndividualSubscription } from '../../utils/api';
+import { ORDER_INFO } from '../../utils/constants';
 
 export function fetchInfoPrices(instrument, props, cb) {
     instrument.expiry = instrument.Expiry ? instrument.Expiry : instrument.FxForwardMaxForwardDate;
@@ -139,44 +140,44 @@ export function stopLossFormData(stopLossPrice) {
 export function getUpdatedValues(event, order, ask, bid) {
     const value = event.target.value;
     switch (event.target.id) {
-        case 'BuySell':
+        case ORDER_INFO.BUYSELL:
             order.currentOrder.BuySell = value;
             order.currentOrder.OrderPrice = order.currentOrder.BuySell === 'Buy' ? ask : bid;
             break;
 
-        case 'OrderDuration':
+        case ORDER_INFO.ORDER_DURATION:
             order.currentOrder.OrderDuration.DurationType = value;
             break;
 
-        case 'OrderAmount':
+        case ORDER_INFO.ORDER_AMOUNT:
             order.currentOrder.Amount = value;
             break;
 
-        case 'OrderPrice':
+        case ORDER_INFO.ORDER_PRICE:
             order.currentOrder.OrderPrice = value;
             break;
 
-        case 'Account':
+        case ORDER_INFO.ACCOUNT:
             order.currentOrder.AccountKey = value;
             break;
 
-        case 'ToOpenClose':
+        case ORDER_INFO.TO_OPEN_CLOSE:
             order.currentOrder.ToOpenClose = value;
             break;
 
-        case 'OrderType':
+        case ORDER_INFO.ORDER_TYPE:
             order.currentOrder.OrderType = value;
             break;
 
-        case 'TakeProfitPrice':
+        case ORDER_INFO.TAKE_PROFIT_PRICE:
             order.takeProfitPrice = value;
             break;
 
-        case 'StopLossPrice':
+        case ORDER_INFO.STOP_LOSS_PRICE:
             order.stopLossPrice = value;
             break;
 
-        case 'StopLoss-OrderType':
+        case ORDER_INFO.STOP_LOSS_ORDER_TYPE:
             order.stopLossOrderType = value;
             break;
 

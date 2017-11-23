@@ -24,8 +24,8 @@ function getSelectCtrl(props) {
                     )}
             >
                 <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={Stylesheet.Text12BoldBlack}>{label} </Text>
-                    <Text style={[Stylesheet.Text12BoldWhite, { fontSize: 12 }]}>{value} </Text>
+                    <Text style={Stylesheet.smallBlackText}>{label} </Text>
+                    <Text style={[Stylesheet.smallWhiteText, { fontSize: 12 }]}>{value} </Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -36,7 +36,7 @@ function getTextCtrl({ label, placeholder, onChange, value }) {
 
     return (
         <View style={{ backgroundColor: '#888', flex: 1 }} >
-            <Text style={Stylesheet.Text12BoldBlack}> {label} </Text>
+            <Text style={Stylesheet.smallBlackText}> {label} </Text>
             <TextInput placeholder={placeholder}
                 keyboardType="numeric"
                 placeholderTextColor="#fff"

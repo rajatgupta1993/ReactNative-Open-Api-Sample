@@ -18,7 +18,8 @@ function DataTable(props) {
                         flexWrap={'wrap'}
                         ellipsizeMode={'tail'}
                         overflow={'visible'}
-                    >{key}</Text>
+                    >{key}
+                    </Text>
 
                     <View style={{ width: 1, backgroundColor: '#111', marginVertical: -16 }} />
                     <View style={{ flex: 1 }} />
@@ -26,7 +27,8 @@ function DataTable(props) {
                         numberOfLines={5}
                         flexWrap={'wrap'}
                         overflow={'visible'}
-                    >{_.isArray(value) ? _.join(value, ', ') : `${value}`}</Text>
+                    >{_.isArray(value) ? _.join(value, ', ') : `${value}`}
+                    </Text>
                 </View>
             );
         }

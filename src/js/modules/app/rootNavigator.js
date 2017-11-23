@@ -1,6 +1,8 @@
 import React from 'react';
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
-import { Dimensions } from 'react-native';
+import {
+    Dimensions,
+} from 'react-native';
 import Home from '../home/home';
 import UserInfo from '../userInfo/index';
 import TradeContainer from '../trade/tradeContainer';
@@ -26,7 +28,6 @@ const home = StackNavigator({
                 headerTitleStyle: {
                     color: '#fff',
                 },
-
             };
         },
     },
@@ -48,7 +49,6 @@ const addToken = StackNavigator({
                 headerTitleStyle: {
                     color: '#fff',
                 },
-
             };
         },
     },
@@ -70,7 +70,6 @@ const orderAndPosition = StackNavigator({
                 headerTitleStyle: {
                     color: '#fff',
                 },
-
             };
         },
     },
@@ -93,7 +92,6 @@ const searchInstrument = StackNavigator({
                 headerTitleStyle: {
                     color: '#fff',
                 },
-
             };
         },
     },
@@ -113,7 +111,6 @@ const searchInstrument = StackNavigator({
                 headerTitleStyle: {
                     color: '#fff',
                 },
-
             };
         },
     },

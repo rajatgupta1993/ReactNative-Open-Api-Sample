@@ -1,5 +1,4 @@
 import { AppRegistry } from 'react-native';
-//import App from './App';
-import Main from './main'
+import Main from './main';
 
-AppRegistry.registerComponent('FirstProject', () => Main);
+AppRegistry.registerComponent('OpenApiSamplesMobile', () => Main);

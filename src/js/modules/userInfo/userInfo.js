@@ -6,7 +6,6 @@ import {
     TextInput,
     ScrollView,
 } from 'react-native';
-
 import { object, string, func, bool } from 'prop-types';
 import Error from '../error';
 import Stylesheet from '../../../styles/styleSheet';
@@ -60,11 +59,11 @@ class UserInfo extends React.PureComponent {
                             <Button
                                 title="Submit"
                                 color="#222"
-                                onPress={this.handleFormSubmit.bind(this)}
+                                onPress={this.handleFormSubmit}
                             />
                         </View>)}
 
-                    {(userData != null && userData.ClientKey != null) && (
+                    {(userData && userData.ClientKey) && (
                         <View style={[Stylesheet.BoxUnderline, { marginTop: 20, height: 400, borderColor: '#111' }]}>
                             <DataTable data={userData}/>
                         </View>)}

@@ -10,7 +10,6 @@ class Loader extends React.PureComponent {
 
         return (
             <View style={{ flex: 1 }} >
-
                 <ActivityIndicator
                     animating={this.props.isLoading}
                     color="#bc2b78"
@@ -22,7 +21,7 @@ class Loader extends React.PureComponent {
     }
 }
 
-// Loader.propTypes = { isLoading: bool };
+Loader.propTypes = { isLoading: bool };
 
 Loader.defaultProps = { isLoading: false };
 

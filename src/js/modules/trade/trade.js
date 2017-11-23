@@ -1,5 +1,12 @@
 import React from 'react';
-import { Text, View, Alert, ScrollView, Dimensions, ToastAndroid } from 'react-native';
+import {
+    Text,
+    View,
+    Alert,
+    ScrollView,
+    Dimensions,
+    ToastAndroid,
+} from 'react-native';
 import { Root, Button } from 'native-base';
 import * as queries from './queries';
 import { object, func, bool } from 'prop-types';
@@ -8,6 +15,7 @@ import Dropdown from '../../components/dropdown';
 import UserInputs from './components/userInputs';
 import StockInfoRows from './components/stockInfoRows';
 import { checkIfOption, roundUptoNDecimals } from '../../utils/global';
+import { TRADE_MARKET } from '../../utils/constants';
 import Stylesheet from '../../../styles/styleSheet';
 import ActivityIndicator from '../../components/activityIndicator';
 import StockSummary from './components/stockSummary';
@@ -15,10 +23,10 @@ import StockSummary from './components/stockSummary';
 const orderDuration = ['DayOrder', 'GoodTillCancel', 'ImmediateOrCancel'];
 const { deviceWidth, deviceHeight } = Dimensions.get('window');
 
-class Orders extends React.PureComponent {
+class Trade extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.actionSheet = null;
+
         this.currentOrder = {
             // default values on UI.
             Uic: '',
@@ -153,14 +161,15 @@ class Orders extends React.PureComponent {
     handlePlaceOrder(BuySell) {
         this.currentOrder.Orders = [];
         this.currentOrder.BuySell = BuySell;
+        const { selectedAccount, takeProfitOpen, stopLossOpen } = this.state;
+        const obj = { selectedAccount, ...this.props };
 
-        const obj = { selectedAccount: this.state.selectedAccount, ...this.props };
-        if (this.state.takeProfitOpen) {
+        if (takeProfitOpen) {
             // Setup related order
             const order = queries.getRelatedOrder('Limit', this.takeProfitPrice, this.currentOrder);
             this.currentOrder.Orders.push(order);
         }
-        if (this.state.stopLossOpen) {
+        if (stopLossOpen) {
             // Setup another related order
             const order = queries.getRelatedOrder(this.stopLossOrderType, this.stopLossPrice, this.currentOrder);
             order.StopLimitPrice = this.stopLossPrice;
@@ -207,6 +216,8 @@ class Orders extends React.PureComponent {
     }
 
     render() {
+
+        console.log(this.currentOrder);
         const { instrument, isLoading } = this.props;
         const assetType = (instrument && instrument.AssetType === 'CfdOnStock') ? 'CFD' : instrument.AssetType;
         const DisplayAndFormat = this.state.instrumentInfo ? this.state.instrumentInfo.DisplayAndFormat : null;
@@ -214,9 +225,9 @@ class Orders extends React.PureComponent {
         const PriceInfoDetails = this.state.instrumentInfo ? this.state.instrumentInfo.PriceInfoDetails : null;
         const InstrumentPriceDetails = this.state.instrumentInfo ? this.state.instrumentInfo.InstrumentPriceDetails : null;
         const Quote = this.state.instrumentInfo ? this.state.instrumentInfo.Quote : null;
-        const marketStatus = (InstrumentPriceDetails && InstrumentPriceDetails.IsMarketOpen) ? 'Market Open' : 'Market Closed';
+        const marketStatus = (InstrumentPriceDetails && InstrumentPriceDetails.IsMarketOpen) ? TRADE_MARKET.MARKET_OPEN : TRADE_MARKET.MARKET_CLOSED;
         const netChangeColor = (PriceInfo && PriceInfo.NetChange > 0) ? 'green' : 'red';
-        const accountTitle = this.state.selectedAccount ? this.state.selectedAccount.AccountId : 'Select Account';
+        const accountTitle = this.state.selectedAccount ? this.state.selectedAccount.AccountId : TRADE_MARKET.SELECT_ACCOUNT;
         return (
             <ScrollView style={{ flex: 1, height: deviceHeight, width: deviceWidth, backgroundColor: '#444' }}>
                 <View style={[Stylesheet.FlexOne, Stylesheet.AppPaddingX, Stylesheet.AppPaddingTop, Stylesheet.screenWidthHeight]}>
@@ -233,7 +244,7 @@ class Orders extends React.PureComponent {
 
                         {/* select account dropdown*/}
                         <View style={[Stylesheet.BoxUnderline, Stylesheet.XCenter, Stylesheet.YCenter, Stylesheet.textNDropdown]}>
-                            <Text style={[Stylesheet.Text12BoldWhite, { flex: 1 }]}>
+                            <Text style={[Stylesheet.smallWhiteText, { flex: 1 }]}>
                                 Select Account
                             </Text>
                             <Dropdown
@@ -255,15 +266,15 @@ class Orders extends React.PureComponent {
                         {/* Last Traded , Today's change Low/High*/}
                         {(PriceInfo && PriceInfoDetails) && <View style={{ marginTop: 2 }}>
                             <StockInfoRows length="3"
-                                data1={PriceInfoDetails.LastTraded}
-                                data2={`${roundUptoNDecimals(PriceInfo.NetChange, DisplayAndFormat.Decimals)}/${PriceInfo.PercentChange}%`}
-                                data3={`${PriceInfo.Low}/${PriceInfo.High}`}
+                                firstColData={PriceInfoDetails.LastTraded}
+                                secondColData={`${roundUptoNDecimals(PriceInfo.NetChange, DisplayAndFormat.Decimals)}/${PriceInfo.PercentChange}%`}
+                                thirdColData={`${PriceInfo.Low}/${PriceInfo.High}`}
                                 netChangeColor={netChangeColor}
                             />
                             <StockInfoRows length="3"
-                                data1=" Last Traded"
-                                data2="Today's change"
-                                data3="Low / High"
+                                firstColData=" Last Traded"
+                                secondColData="Today's change"
+                                thirdColData="Low / High"
                                 style
                                 margin
                             />
@@ -271,8 +282,8 @@ class Orders extends React.PureComponent {
 
                         {/* Market Status */}
                         {(InstrumentPriceDetails) && <StockInfoRows length="2"
-                            data1={marketStatus}
-                            data2={this.state.instrumentInfo.PriceSource}
+                            firstColData={marketStatus}
+                            secondColData={this.state.instrumentInfo.PriceSource}
                             text
                         />}
 
@@ -280,25 +291,25 @@ class Orders extends React.PureComponent {
 
                         {(Quote && PriceInfoDetails) && <View style={{ marginTop: 2 }}>
                             <StockInfoRows length="4"
-                                data1="Size"
-                                data2="Bid"
-                                data3="Ask"
-                                data4="Size"
+                                firstColData="Size"
+                                secondColData="Bid"
+                                thirdColData="Ask"
+                                fourthColData="Size"
                                 text
                             />
 
                             <StockInfoRows length="4"
-                                data1={PriceInfoDetails.BidSize}
-                                data2={roundUptoNDecimals(Quote.Bid, DisplayAndFormat.Decimals)}
-                                data3={roundUptoNDecimals(Quote.Ask, DisplayAndFormat.Decimals)}
-                                data4={PriceInfoDetails.AskSize}
+                                firstColData={PriceInfoDetails.BidSize}
+                                secondColData={roundUptoNDecimals(Quote.Bid, DisplayAndFormat.Decimals)}
+                                thirdColData={roundUptoNDecimals(Quote.Ask, DisplayAndFormat.Decimals)}
+                                fourthColData={PriceInfoDetails.AskSize}
                                 text={false}
                             />
                         </View>
                         }
 
                         {/* Duration And price */}
-                        {(PriceInfoDetails) && <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                        {(PriceInfoDetails && this.currentOrder.OrderPrice) && <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <UserInputs
                                 label="DURATION"
                                 onChange={this.handleOrderDurationChange.bind(this)}
@@ -337,7 +348,7 @@ class Orders extends React.PureComponent {
                                     label="QUANTITY"
                                     onChange={this.handleOrderQuantityChange.bind(this)}
                                     componentClass="text"
-                                    value={this.currentOrder.Amount.toString()}
+                                    value={this.currentOrder.Amount ? String(this.currentOrder.Amount) : String(0)}
                                     placeholder="Enter Quantity"
                                 />
                             </View>}
@@ -349,7 +360,7 @@ class Orders extends React.PureComponent {
                                 style={Stylesheet.sellButton}
                                 onPress={() => this.showAlert('sell')}
                             >
-                                <Text style={[Stylesheet.Text12BoldWhite, { fontSize: 12, fontWeight: '700' }]}>
+                                <Text style={[Stylesheet.smallWhiteText, { fontSize: 12, fontWeight: '700' }]}>
                                     SELL
                                 </Text>
                             </Button>
@@ -357,7 +368,7 @@ class Orders extends React.PureComponent {
                                 style={[Stylesheet.sellButton, { backgroundColor: '#1E90FF' }]}
                                 onPress={() => this.showAlert('buy')}
                             >
-                                <Text style={[Stylesheet.Text12BoldWhite, { fontSize: 12, fontWeight: '700' }]} >
+                                <Text style={[Stylesheet.smallWhiteText, { fontSize: 12, fontWeight: '700' }]} >
                                     BUY
                                 </Text>
                             </Button>
@@ -370,7 +381,7 @@ class Orders extends React.PureComponent {
     }
 }
 
-Orders.propTypes = {
+Trade.propTypes = {
     match: object,
     instrument: object,
     navigation: object,
@@ -378,6 +389,6 @@ Orders.propTypes = {
     isLoading: bool,
 };
 
-Orders.defaultProps = { match: {} };
+Trade.defaultProps = { match: {} };
 
-export default Orders;
+export default Trade;

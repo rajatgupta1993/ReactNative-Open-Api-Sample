@@ -12,7 +12,7 @@ export default function StockSummary({ DisplayAndFormat, assetType }) {
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
             <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row',}}>
-                    <Text style={[Stylesheet.Text12BoldWhite, { flex: 12 }]}
+                    <Text style={[Stylesheet.smallWhiteText, { flex: 12 }]}
                         ellipsizeMode="tail"
                         numberOfLines={1}
                         maxLength={30}

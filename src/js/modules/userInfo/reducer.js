@@ -7,7 +7,7 @@ import _ from 'lodash';
 // };
 
 const initialState = {
-    accessToken: 'eyJhbGciOiJFUzI1NiIsIng1dCI6IkQ0QUU4MjQ2RDYyNTBFMTY5Njg4NDFCREY4Nzc2MTI4NUMwNUJCMUYifQ.eyJvYWEiOiI3Nzc3NyIsImlzcyI6Im9hIiwiYWlkIjoiMTEwIiwidWlkIjoiSXlERjVicGJkRTRhTEtObGUxU2RCZz09IiwiY2lkIjoiSXlERjVicGJkRTRhTEtObGUxU2RCZz09IiwiaXNhIjoiVHJ1ZSIsInRpZCI6IjIwMDIiLCJzaWQiOiJlYWI0ZmNkOGY4YTE0OTAyYTQ5NDg5NDQ4NzY4MTYwOCIsImRnaSI6IjgyIiwiZXhwIjoiMTUxMTMzNTUwNyJ9.aiS3tQn-GmdMGbI035j4kc6KtvHKGjsWMQctB_cDOfOie0Xw-L_Dxi5hVCdxZw0AzgyFKiOCH75-zrT84GMQBA',
+    accessToken: 'eyJhbGciOiJFUzI1NiIsIng1dCI6IkQ0QUU4MjQ2RDYyNTBFMTY5Njg4NDFCREY4Nzc2MTI4NUMwNUJCMUYifQ.eyJvYWEiOiI3Nzc3NyIsImlzcyI6Im9hIiwiYWlkIjoiMTEwIiwidWlkIjoiSXlERjVicGJkRTRhTEtObGUxU2RCZz09IiwiY2lkIjoiSXlERjVicGJkRTRhTEtObGUxU2RCZz09IiwiaXNhIjoiVHJ1ZSIsInRpZCI6IjIwMDIiLCJzaWQiOiI0NGNiODZhNTAxZjQ0NTg3Yjk4MjQ2ZmM1NjU4OGQzNSIsImRnaSI6IjgyIiwiZXhwIjoiMTUxMTUwOTQ2MSJ9.ftL0hMVQZZwfTJWqSO0JN-TO7wBystax6C2DxM0es_klAQhO3U4Tbu_Ln54a6kuKkGJtO-2pC5PF3QMdCo5y5g',
     userData: {
         ClientKey: 'IyDF5bpbdE4aLKNle1SdBg==',
         Culture: 'en-GB',
@@ -36,4 +36,3 @@ export default function(state = initialState, action) {
             return state;
     }
 }
-

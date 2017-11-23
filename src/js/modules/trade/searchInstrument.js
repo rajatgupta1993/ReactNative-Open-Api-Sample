@@ -1,5 +1,9 @@
 import React from 'react';
-import { Text, View, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import {
+    Text,
+    View,
+    ScrollView,
+} from 'react-native';
 import { Container, Item, Input, Icon } from 'native-base';
 import * as queries from './queries';
 import { bool } from 'prop-types';
@@ -8,9 +12,7 @@ import Stylesheet from '../../../styles/styleSheet';
 import InstrumentRow from './instrumentRow';
 import ActivityIndicator from '../../components/activityIndicator';
 
-const { height } = Dimensions.get('window');
-
-class searchInstrument extends React.Component {
+class searchInstrument extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -20,6 +22,7 @@ class searchInstrument extends React.Component {
             instrumentSearchResult: [],
         };
     }
+
     onSearchTextChange(text) {
         this.setState({ searchTerm: text });
         if (text.length <= 1) {
@@ -31,12 +34,10 @@ class searchInstrument extends React.Component {
                 });
             });
         }
-
     }
 
     render() {
         return (
-
             <Container style={{ flex: 1, backgroundColor: '#444' }}>
                 <Error>
                     Enter correct access token

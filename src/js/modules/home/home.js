@@ -8,9 +8,7 @@ import Stylesheet from '../../../styles/styleSheet';
 
 export default function Home(props) {
     return (
-
         <View style={[Stylesheet.FlexOne, Stylesheet.YCenter, Stylesheet.XCenter, {
-            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#444',
@@ -35,5 +33,3 @@ Home.propTypes = {
     navigation: object,
     navigate: func,
 };
-
-

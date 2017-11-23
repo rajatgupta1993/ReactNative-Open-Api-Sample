@@ -1,4 +1,4 @@
-package com.firstproject;
+package com.OpenApiSamplesMobile;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "FirstProject";
+        return "OpenApiSamplesMobile";
     }
 }

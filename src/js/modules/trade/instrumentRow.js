@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 function instrumentRow(props) {
-    const generateTable = (data) => _.map(data, (value, key) => {
+
+    const generateRow = (data) => _.map(data, (value, key) => {
         const assetType = (value.AssetType === 'CfdOnStock') ? 'CFD' : value.AssetType;
         const object = { instrument: value, ...props };
         return (
@@ -17,22 +18,20 @@ function instrumentRow(props) {
                 onPress={() => props.navigation.navigate('TradeScreen', { ...object })}
             >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={Stylesheet.Text12BoldWhite} >{value.Description}</Text>
+                    <Text style={Stylesheet.smallWhiteText} >{value.Description}</Text>
                     <Text style={Stylesheet.searchInstrumentRowMinorText} >{assetType}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={Stylesheet.searchInstrumentRowMinorText} >{value.Symbol}</Text>
                     <Text style={Stylesheet.searchInstrumentRowMinorText} >{value.ExchangeName} </Text>
                 </View>
-
             </TouchableOpacity>
         );
-
     });
 
     return (
         <View style={{ flex: 1 }} >
-            {generateTable(props.data)}
+            {generateRow(props.data)}
         </View>
     );
 }

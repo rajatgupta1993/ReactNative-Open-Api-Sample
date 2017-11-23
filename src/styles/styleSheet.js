@@ -62,14 +62,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    Text12BoldBlack: {
+    smallBlackText: {
         fontSize: 12,
         fontWeight: '600',
         color: '#000',
         fontFamily: 'roboto',
     },
 
-    Text12BoldWhite: {
+    smallWhiteText: {
         fontSize: 12,
         fontWeight: '600',
         color: '#fff',

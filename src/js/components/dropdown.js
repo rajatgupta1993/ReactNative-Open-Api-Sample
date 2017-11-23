@@ -1,5 +1,7 @@
 import React from 'react';
-import { Picker } from 'react-native';
+import {
+    Picker,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -26,6 +28,12 @@ function Dropdown({ data, title, id, itemKey, value, handleSelect, promptHeading
 
 Dropdown.propTypes = {
     data: PropTypes.array,
+    title: PropTypes.string,
+    id: PropTypes.string,
+    itemKey: PropTypes.string,
+    value: PropTypes.string,
+    handleSelect: PropTypes.func,
+    promptHeading: PropTypes.string,
 };
 
 export default Dropdown;

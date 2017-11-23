@@ -1,4 +1,4 @@
-package com.firstproject;
+package com.OpenApiSamplesMobile;
 
 import android.app.Application;
 
