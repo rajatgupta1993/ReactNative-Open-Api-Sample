@@ -217,7 +217,7 @@ class Trade extends React.PureComponent {
 
     render() {
 
-        console.log(this.currentOrder);
+        console.log(this.props);
         const { instrument, isLoading } = this.props;
         const assetType = (instrument && instrument.AssetType === 'CfdOnStock') ? 'CFD' : instrument.AssetType;
         const DisplayAndFormat = this.state.instrumentInfo ? this.state.instrumentInfo.DisplayAndFormat : null;
@@ -235,12 +235,12 @@ class Trade extends React.PureComponent {
                         <Error>
                             Enter correct access token
                         </Error>
-                        {(isLoading) && (<View style={{ width: deviceWidth, height: deviceHeight, flex: 1 }}><ActivityIndicator
+                        {(isLoading) && (<ActivityIndicator
                             animating
                             color="#1E90FF"
                             size="large"
                         />
-                        </View>)}
+                        )}
 
                         {/* select account dropdown*/}
                         <View style={[Stylesheet.BoxUnderline, Stylesheet.XCenter, Stylesheet.YCenter, Stylesheet.textNDropdown]}>
@@ -261,6 +261,7 @@ class Trade extends React.PureComponent {
                         {(DisplayAndFormat) &&
                             <StockSummary DisplayAndFormat={DisplayAndFormat}
                                 assetType={assetType}
+                                navigation={this.props.navigation}
                             />}
 
                         {/* Last Traded , Today's change Low/High*/}
@@ -364,6 +365,9 @@ class Trade extends React.PureComponent {
                                     SELL
                                 </Text>
                             </Button>
+
+                            <View style={{ width: 10 }} />
+
                             <Button block light
                                 style={[Stylesheet.sellButton, { backgroundColor: '#1E90FF' }]}
                                 onPress={() => this.showAlert('buy')}

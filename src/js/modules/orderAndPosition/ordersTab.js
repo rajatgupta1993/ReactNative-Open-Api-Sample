@@ -1,162 +1,74 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import {
-    Text,
     View,
     ScrollView,
 } from 'react-native';
 import _ from 'lodash';
-import { object, bool, string, array } from 'prop-types';
-import * as queries from './queries';
 import Stylesheet from '../../../styles/styleSheet';
-import { TRADE_TYPE } from '../../utils/constants';
 import OrdersTabHeader from './components/ordersTabHeader';
 import ActivityIndicator from '../../components/activityIndicator';
+import PropTypes from 'prop-types';
+import OrdersAndPositionTableColumn from './components/ordersAndPositionTableColumn';
 
-export default class OrdersTab extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = { tradeUpdated: false };
-        this.trades = {};
-        this.posTrades = {};
-        this.tradeSubscription = {};
-        this.currentAccountInformation = this.props.currentAccountInformation;
-        this.tradeAccountSubscribed = this.currentAccountInformation.AccountId;
-        this.tradeTypeId = 'OrderId';
-        this.positionDetails = {};
-        this.posTradeSubscription = {};
-        this.handleTradeUpdate = this.handleTradeUpdate.bind(this);
-    }
+export default function OrdersTab(props) {
+    return (
+        <View style={{ backgroundColor: '#444' }}>
 
-    // this function is for fetching subscription on first load.
-    componentDidMount() {
-        this.createTradeSubscription();
-    }
+            <OrdersTabHeader />
 
-    // this is for handling account reselection.
-    componentWillReceiveProps(newProps) {
-        this.currentAccountInformation = newProps.currentAccountInformation;
-        if (this.tradeAccountSubscribed !== this.currentAccountInformation.AccountId) {
-            this.createTradeSubscription();
-        }
-    }
+            {(props.isLoading) && (<ActivityIndicator
+                animating
+                color="#1E90FF"
+                size="large"
+            />
+            )}
 
-    // subscriptions need to be destroyed while navigating away from pages.
-    componentWillUnmount() {
-        this.disposeSubscription();
-    }
+            {!_.isEmpty(props.trades) &&
+            <ScrollView >
 
-    createTradeSubscription() {
-        this.disposeSubscription();
-        const queryKey = {
-            accountKey: this.currentAccountInformation.AccountKey,
-            clientKey: this.currentAccountInformation.ClientKey,
-        };
+                {_.map(props.trades, (value, key) => {
+                    return (
+                        value && <View key={key} style={Stylesheet.ordersTabRow}>
+                            <OrdersAndPositionTableColumn
+                                data1={value.DisplayAndFormat.Description}
+                                data2={value.BuySell}
+                                data3={` - ${value.OpenOrderType}`}
+                                numberOfTextData="3"
+                                flexNumber={6}
+                            />
 
-        if (this.props.tradeType === TRADE_TYPE.ORDER || this.props.tradeType === TRADE_TYPE.NETPOSITION) {
-            queries.createSubscription(
-                this.props,
-                {
-                    accountKey: queryKey.accountKey,
-                    clientKey: queryKey.clientKey,
-                    fieldGroups: this.props.fieldGroups,
-                },
-                this.props.tradeType,
-                this.handleTradeUpdate,
-                (tradeSubscription) => {
-                    this.tradeSubscription = tradeSubscription;
-                    this.tradeAccountSubscribed = this.currentAccountInformation.AccountId;
-                }
-            );
-        }
-    }
+                            <OrdersAndPositionTableColumn
+                                data1={value.Amount}
+                                data2={value.Price ? value.Price : '-'}
+                                numberOfTextData="2"
+                                flexNumber={2}
+                            />
 
-    handleTradeUpdate(response) {
-        this.trades = queries.getUpdatedTrades(this.trades, this.tradeTypeId, response.Data);
-        this.setState({ tradeUpdated: !this.state.tradeUpdated });
-    }
+                            <OrdersAndPositionTableColumn
+                                data1="Stop"
+                                data2="Limit"
+                                numberOfTextData="2"
+                                flexNumber={2}
+                                styleData={{ flex: 2, alignItems: 'flex-end', paddingRight: 10 }}
+                            />
 
-    disposeSubscription() {
-        if (!_.isEmpty(this.tradeSubscription)) {
-            queries.unSubscribe(this.props, this.tradeSubscription, () => {
-                this.trades = {};
-                this.tradeSubscription = {};
-            });
-        }
-    }
+                        </View>
+                    );
 
-    render() {
-        return (
+                })}
+            </ScrollView>}
 
-            <View style={[Stylesheet.FlexOne, { backgroundColor: '#444' }]} >
-
-                <View style={{ backgroundColor: '#444' }}>
-
-                    <OrdersTabHeader />
-
-                    {(this.props.isLoading) && (<ActivityIndicator
-                        animating
-                        color="#1E90FF"
-                        size="large"
-                    />
-                    )}
-
-                    {!_.isEmpty(this.trades) &&
-                    <ScrollView >
-
-                        {_.map(this.trades, (value, key) => {
-                            return (
-                                value && <View key={key} style={Stylesheet.ordersTabRow}>
-                                    <View style={{ flex: 6 }}>
-                                        <Text style={Stylesheet.smallWhiteText}>
-                                            {value.DisplayAndFormat.Description}
-                                        </Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                {value.BuySell}
-                                            </Text>
-                                            <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                {` - ${value.OpenOrderType}`}
-                                            </Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={{ flex: 2 }}>
-                                        <Text style={Stylesheet.smallWhiteText}>
-                                            {value.Amount}
-                                        </Text>
-                                        <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                            {value.Price ? value.Price : '-'}
-                                        </Text>
-                                    </View>
-
-                                    <View style={{ flex: 2, alignItems: 'flex-end', paddingRight: 10 }}>
-                                        <Text style={Stylesheet.smallWhiteText}>
-                                            Stop
-                                        </Text>
-                                        <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                            Limit
-                                        </Text>
-                                    </View>
-                                </View>
-                            );
-                        })}
-                    </ScrollView>}
-                </View>
-            </View>
-        );
-    }
+        </View>
+    );
 }
 
 OrdersTab.propTypes = {
-    currentAccountInformation: object,
-    isLoading: bool,
-    fieldGroups: array,
-    tradeType: string,
+    isLoading: PropTypes.bool,
+    trades: PropTypes.object,
 };
 
 OrdersTab.defaultProps = {
-    currentAccountInformation: {},
     isLoading: false,
-    fieldGroups: [],
-    tradeType: '',
+    trades: {},
 };
+

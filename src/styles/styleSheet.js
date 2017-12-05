@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+console.log(width, height);
 
 const styles = StyleSheet.create({
 
@@ -17,8 +18,8 @@ const styles = StyleSheet.create({
     },
 
     screenWidthHeight: {
-        height: height,
-        width: width,
+        height,
+        width,
     },
 
     WhiteBg: {
@@ -57,7 +58,6 @@ const styles = StyleSheet.create({
     },
 
     ActivityIndicator: {
-        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     sellButton: {
         flex: 1,
         backgroundColor: '#c30101',
-        marginRight: 5,
         height: 30,
     },
 

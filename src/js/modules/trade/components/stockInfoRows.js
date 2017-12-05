@@ -9,18 +9,18 @@ import PropTypes from 'prop-types';
 function showStockData(props) {
     const length = props.length;
     switch (length) {
-        case '2': return stockInfoForTwoData(props);
+        case '2': return stockInfoForTwoColumns(props);
 
-        case '3': return stockInfoForThreeData(props);
+        case '3': return stockInfoForThreeColumns(props);
 
-        case '4': return stockInfoForFourData(props);
+        case '4': return stockInfoForFourColumns(props);
 
         default:
             break;
     }
 }
 
-function stockInfoForTwoData({ text, firstColData, secondColData }) {
+function stockInfoForTwoColumns({ text, firstColData, secondColData }) {
     return (
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -31,7 +31,7 @@ function stockInfoForTwoData({ text, firstColData, secondColData }) {
     );
 
 }
-function stockInfoForThreeData(props) {
+function stockInfoForThreeColumns(props) {
     const { firstColData, secondColData, thirdColData, netChangeColor, style, margin } = props;
 
     return (<View style={[Stylesheet.searchInstrumentRow, {
@@ -56,7 +56,7 @@ function stockInfoForThreeData(props) {
 
 }
 
-function stockInfoForFourData(props) {
+function stockInfoForFourColumns(props) {
     const { firstColData, secondColData, thirdColData, fourthColData, text } = props;
     return (
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', paddingVertical: 4 }]}>
@@ -86,13 +86,13 @@ stockInfoRows.propTypes = {
     data: PropTypes.array,
 };
 
-stockInfoForTwoData.propTypes = {
+stockInfoForTwoColumns.propTypes = {
     text: PropTypes.bool,
     firstColData: PropTypes.string,
     secondColData: PropTypes.string,
 };
 
-stockInfoForThreeData.propTypes = {
+stockInfoForThreeColumns.propTypes = {
     firstColData: PropTypes.string,
     secondColData: PropTypes.string,
     thirdColData: PropTypes.string,
@@ -101,7 +101,7 @@ stockInfoForThreeData.propTypes = {
     margin: PropTypes.bool,
 };
 
-stockInfoForFourData.propTypes = {
+stockInfoForFourColumns.propTypes = {
     firstColData: PropTypes.string,
     secondColData: PropTypes.string,
     thirdColData: PropTypes.string,

@@ -7,11 +7,14 @@ import { Icon } from 'native-base';
 import Stylesheet from '../../../../styles/styleSheet';
 import { string, object } from 'prop-types';
 
-export default function StockSummary({ DisplayAndFormat, assetType }) {
+// export default function StockSummary({ DisplayAndFormat, assetType }) {
+export default function StockSummary(props) {
+
+    const { DisplayAndFormat, assetType, navigation } = props;
     return (
         <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
             <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row',}}>
+                <View style={{ flexDirection: 'row' }}>
                     <Text style={[Stylesheet.smallWhiteText, { flex: 12 }]}
                         ellipsizeMode="tail"
                         numberOfLines={1}
@@ -37,7 +40,7 @@ export default function StockSummary({ DisplayAndFormat, assetType }) {
             </View>
             <View style={{ paddingHorizontal: 10 }}>
                 <Icon name="md-search" style={{ fontSize: 18, color: '#fff' }}
-                    onPress={() => this.props.navigation.goBack('')}
+                    onPress={() => navigation.goBack('')}
                 />
             </View>
         </View>
@@ -47,4 +50,5 @@ export default function StockSummary({ DisplayAndFormat, assetType }) {
 StockSummary.propTypes = {
     DisplayAndFormat: object,
     assetType: string,
+    navigation: object,
 };

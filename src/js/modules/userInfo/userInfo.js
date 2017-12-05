@@ -41,7 +41,7 @@ class UserInfo extends React.PureComponent {
                     </Error>
                     {(isLoading) ? (<ActivityIndicator
                         animating
-                        color="#4c4cff"
+                        color="#1E90FF"
                         size="large"
                     />) : (
                         <View style={[Stylesheet.BoxUnderline, { borderColor: '#111' }]}>

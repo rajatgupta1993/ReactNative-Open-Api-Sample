@@ -1,240 +1,112 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import {
-    Text,
     View,
     ScrollView,
 } from 'react-native';
-import { object, string, bool, array } from 'prop-types';
-import Stylesheet from '../../../styles/styleSheet';
-import { TRADE_TYPE } from '../../utils/constants';
 import { roundUptoNDecimals } from '../../utils/global';
-import * as queries from './queries';
+import Stylesheet from '../../../styles/styleSheet';
 import _ from 'lodash';
 import PositionsTabHeader from './components/positionsTabHeader';
 import ActivityIndicator from '../../components/activityIndicator';
+import PropTypes from 'prop-types';
+import OrdersAndPositionTableColumn from './components/ordersAndPositionTableColumn';
 
-export default class PositionTab extends PureComponent {
-    constructor(props) {
+export default function PositionTab(props) {
+    return (
+        <View style={{ backgroundColor: '#444' }}>
+            <PositionsTabHeader />
+            {(props.isLoading) && (<ActivityIndicator
+                animating
+                color="#1E90FF"
+                size="large"
+            />
+            )}
+            {!_.isEmpty(props.trades) &&
+                <ScrollView>
+                    {_.map(props.trades, (value, key) => {
+                        const firstTextColor = (value.NetPositionView.ProfitLossOnTrade + value.NetPositionView.TradeCostsTotal > 0 ? 'green' : '#e90101');
+                        const secondTextColor = (value.NetPositionView.ProfitLossOnTradeInBaseCurrency + value.NetPositionView.TradeCostsTotalInBaseCurrency > 0 ? 'green' : '#e90101');
+                        return (
+                            value && <View key={key} style={Stylesheet.ordersTabRow}>
+                                <OrdersAndPositionTableColumn data1={value.DisplayAndFormat.Description}
+                                    data2={value.NetPositionBase.Amount}
+                                    data3={` ${value.NetPositionView.Status}`}
+                                    numberOfTextData="3"
+                                    flexNumber={6}
+                                />
 
-        super(props);
-        this.state = { tradeUpdated: false };
-        this.trades = {};
-        this.posTrades = {};
-        this.tradeSubscription = {};
-        this.currentAccountInformation = this.props.currentAccountInformation;
-        this.tradeAccountSubscribed = this.currentAccountInformation.AccountId;
-        this.tradeTypeId = 'NetPositionId';
-        this.positionDetails = {};
-        this.posTradeSubscription = {};
-        this.handleTradeUpdate = this.handleTradeUpdate.bind(this);
-        this.handlePositionTradeUpdate = this.handlePositionTradeUpdate.bind(this);
-    }
+                                <OrdersAndPositionTableColumn
+                                    data1={
+                                        !isNaN(value.NetPositionView.ProfitLossOnTrade +
+                                            value.NetPositionView.TradeCostsTotal) ?
+                                            `${roundUptoNDecimals(value.NetPositionView.ProfitLossOnTrade + value.NetPositionView.TradeCostsTotal, 0)} ${value.DisplayAndFormat.Currency}`
+                                            : ''
+                                    }
+                                    data2={
+                                        !isNaN(value.NetPositionView.ProfitLossOnTradeInBaseCurrency +
+                                            value.NetPositionView.TradeCostsTotalInBaseCurrency)
+                                            ? roundUptoNDecimals(value.NetPositionView.ProfitLossOnTradeInBaseCurrency +
+                                                value.NetPositionView.TradeCostsTotalInBaseCurrency, 0)
+                                            : ''
+                                    }
+                                    numberOfTextData="2"
+                                    flexNumber={2}
+                                    firstTextColor={firstTextColor}
+                                    secondTextColor={secondTextColor}
+                                />
 
-    // this function is for fetching subscription on first load.
-    componentDidMount() {
-        this.createTradeSubscription();
-    }
-
-    // this is for handling account reselection.
-    componentWillReceiveProps(newProps) {
-        this.currentAccountInformation = newProps.currentAccountInformation;
-        if (this.tradeAccountSubscribed !== this.currentAccountInformation.AccountId) {
-            this.createTradeSubscription();
-        }
-    }
-
-    // subscriptions need to be destroyed while navigating away from pages.
-    componentWillUnmount() {
-        this.disposeSubscription();
-    }
-
-    createTradeSubscription() {
-        this.disposeSubscription();
-        const queryKey = {
-            accountKey: this.currentAccountInformation.AccountKey,
-            clientKey: this.currentAccountInformation.ClientKey,
-        };
-
-        if (this.props.tradeType === TRADE_TYPE.ORDER || this.props.tradeType === TRADE_TYPE.NETPOSITION) {
-            queries.createSubscription(
-                this.props,
-                {
-                    accountKey: queryKey.accountKey,
-                    clientKey: queryKey.clientKey,
-                    fieldGroups: this.props.fieldGroups,
-                },
-                this.props.tradeType,
-                this.handleTradeUpdate,
-                (tradeSubscription) => {
-                    this.tradeSubscription = tradeSubscription;
-                    this.tradeAccountSubscribed = this.currentAccountInformation.AccountId;
-                }
-            );
-        }
-        if (this.props.tradeType === TRADE_TYPE.NETPOSITION) {
-            const params = {
-                'props': this.props,
-                'netPositionTradeType': this.props.tradeType,
-                'positionTradeType': TRADE_TYPE.POSITION,
-                'netPositionTradeCallBack': this.handleTradeUpdate,
-                'positionCallBack': this.handlePositionTradeUpdate,
-            };
-            queries.createSubscriptionAll(
-                {
-                    accountKey: queryKey.accountKey,
-                    clientKey: queryKey.clientKey,
-                    fieldGroups: this.props.fieldGroups,
-                },
-                {
-                    accountKey: queryKey.accountKey,
-                    clientKey: queryKey.clientKey,
-                    fieldGroups: ['DisplayAndFormat', 'PositionBase', 'PositionView'],
-                },
-                params,
-                (tradeSubscription) => {
-                    this.tradeSubscription = tradeSubscription;
-                    this.tradeAccountSubscribed = this.currentAccountInformation.AccountId;
-                },
-                (posTradeSubscription) => {
-                    this.posTradeSubscription = posTradeSubscription;
-                }
-            );
-        }
-    }
-
-    handleTradeUpdate(response) {
-
-        this.trades = queries.getUpdatedTrades(this.trades, this.tradeTypeId, response.Data);
-        this.setState({ tradeUpdated: !this.state.tradeUpdated });
-    }
-
-    handlePositionTradeUpdate(response) {
-        this.posTrades = queries.getUpdatedTrades(this.posTrades, 'PositionId', response.Data);
-        if (!_.isEmpty(this.posTrades)) {
-            this.positionDetails = _.reduce(this.trades, (result, value) => {
-                const NetPositionId = value.NetPositionId;
-                const positions = [];
-                const positionData = _.map(this.posTrades, (valuePostTrades) => {
-                    if (NetPositionId === valuePostTrades.NetPositionId) {
-                        positions.push(valuePostTrades);
-                    }
-                    return positionData;
-                });
-                result[NetPositionId] = positions;
-                return result;
-            }, {});
-        }
-        this.setState({ tradeUpdated: !this.state.tradeUpdated });
-    }
-
-    disposeSubscription() {
-        if (!_.isEmpty(this.tradeSubscription)) {
-            queries.unSubscribe(this.props, this.tradeSubscription, () => {
-                this.trades = {};
-                this.tradeSubscription = {};
-            });
-        }
-    }
-
-    render() {
-        return (
-            <View style={[Stylesheet.FlexOne, { backgroundColor: '#444' }]} >
-                {
-                    <View style={{ backgroundColor: '#444' }}>
-                        <PositionsTabHeader />
-                        {(this.props.isLoading) && (<ActivityIndicator
-                            animating
-                            color="#1E90FF"
-                            size="large"
-                        />
-                        )}
-                        {!_.isEmpty(this.trades) &&
-                            <ScrollView>
-                                {_.map(this.trades, (value, key) => {
-                                    return (
-                                        value && <View key={key} style={Stylesheet.ordersTabRow}>
-                                            <View style={{ flex: 6 }}>
-                                                <Text style={Stylesheet.smallWhiteText}>
-                                                    {value.DisplayAndFormat.Description}
-                                                </Text>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                        {value.NetPositionBase.Amount}
-                                                    </Text>
-                                                    <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                        {` ${value.NetPositionView.Status}`}
-                                                    </Text>
-                                                </View>
-                                            </View>
-
-                                            <View style={{ flex: 2 }}>
-                                                <Text style={[Stylesheet.smallWhiteText, {
-                                                    color: value.NetPositionView.ProfitLossOnTrade + value.NetPositionView.TradeCostsTotal > 0 ? 'green' : '#e90101' }]}
-                                                >
-                                                    {roundUptoNDecimals(value.NetPositionView.ProfitLossOnTrade + value.NetPositionView.TradeCostsTotal, 0)}
-                                                    {` ${value.DisplayAndFormat.Currency}`}
-                                                </Text>
-                                                <Text style={[Stylesheet.searchInstrumentRowMinorText, {
-                                                    color: value.NetPositionView.ProfitLossOnTradeInBaseCurrency + value.NetPositionView.TradeCostsTotalInBaseCurrency > 0 ? 'green' : '#e90101' }]}
-                                                >
-                                                    {roundUptoNDecimals(value.NetPositionView.ProfitLossOnTradeInBaseCurrency + value.NetPositionView.TradeCostsTotalInBaseCurrency, 0)}
-                                                </Text>
-                                            </View>
-
-                                            {value.SingleAndClosedPositions ? (value.SingleAndClosedPositions[0].PositionBase.Amount > 0 ?
-                                                <View style={{ flex: 2, alignItems: 'flex-end', paddingRight: 10 }}>
-                                                    <Text style={Stylesheet.smallWhiteText}>
-                                                        {value.SingleAndClosedPositions[0].PositionView ?
-                                                            value.SingleAndClosedPositions[0].PositionView.CurrentPrice : ''
-                                                        }
-                                                    </Text>
-                                                    <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                        {value.SingleAndClosedPositions[0].PositionBase ?
-                                                            value.SingleAndClosedPositions[0].PositionBase.OpenPrice : ''}
-                                                    </Text>
-                                                </View> :
-                                                value.SingleAndClosedPositions[1] &&
-                                                <View style={{ flex: 2, alignItems: 'flex-end', paddingRight: 10 }}>
-                                                    <Text style={Stylesheet.smallWhiteText}>
-                                                        {value.SingleAndClosedPositions[1].PositionView ?
-                                                            value.SingleAndClosedPositions[1].PositionView.CurrentPrice : ''}
-                                                    </Text>
-                                                    <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                        {value.SingleAndClosedPositions[1].PositionBase ?
-                                                            value.SingleAndClosedPositions[1].PositionBase.OpenPrice : ''}
-                                                    </Text>
-                                                </View>
-                                            ) :
-                                                <View style={{ flex: 2, alignItems: 'flex-end', paddingRight: 10 }}>
-                                                    <Text style={Stylesheet.smallWhiteText}>
-                                                        {value.NetPositionView.CurrentPrice}
-                                                    </Text>
-                                                    <Text style={Stylesheet.searchInstrumentRowMinorText}>
-                                                        {value.NetPositionBase.OpenPrice}
-                                                    </Text>
-                                                </View>
+                                <View style={{ flex: 2, alignItems: 'center', paddingRight: 10 }}>
+                                    {value.SingleAndClosedPositions ? (value.SingleAndClosedPositions[0].PositionBase.Amount > 0 ?
+                                        <OrdersAndPositionTableColumn
+                                            data1={
+                                                value.SingleAndClosedPositions[0].PositionView ?
+                                                    value.SingleAndClosedPositions[0].PositionView.CurrentPrice : ''
                                             }
-                                        </View>
-                                    );
-                                })}
-                            </ScrollView>}
-                    </View>
-                }
-            </View>
-        );
-    }
+                                            data2={
+                                                value.SingleAndClosedPositions[0].PositionBase ?
+                                                    value.SingleAndClosedPositions[0].PositionBase.OpenPrice : ''
+                                            }
+                                            numberOfTextData="2"
+                                            flexNumber={1}
+                                        /> :
+                                        value.SingleAndClosedPositions[1] &&
+                                        <OrdersAndPositionTableColumn
+                                            data1={
+                                                value.SingleAndClosedPositions[1].PositionView ?
+                                                    value.SingleAndClosedPositions[1].PositionView.CurrentPrice : ''
+                                            }
+                                            data2={
+                                                value.SingleAndClosedPositions[1].PositionBase ?
+                                                    value.SingleAndClosedPositions[1].PositionBase.OpenPrice : ''
+                                            }
+                                            numberOfTextData="2"
+                                            flexNumber={1}
+                                        />
+                                    ) :
+                                        <OrdersAndPositionTableColumn
+                                            data1={value.NetPositionView.CurrentPrice}
+                                            data2={value.NetPositionBase.OpenPrice}
+                                            numberOfTextData="2"
+                                            flexNumber={1}
+                                        />
+                                    }
+                                </View>
+                            </View>
+                        );
+
+                    })}
+                </ScrollView>}
+
+        </View>
+    );
 }
 
 PositionTab.propTypes = {
-    currentAccountInformation: object,
-    isLoading: bool,
-    fieldGroups: array,
-    tradeType: string,
+    isLoading: PropTypes.bool,
+    trades: PropTypes.object,
 };
 
 PositionTab.defaultProps = {
-    currentAccountInformation: {},
     isLoading: false,
-    fieldGroups: [],
-    tradeType: '',
+    trades: {},
 };
