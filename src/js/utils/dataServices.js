@@ -6,7 +6,9 @@ import signalr from 'react-native-signalr';
 window.$ = window.jQuery;
 window.$.connection = _.partial(signalr.hubConnection);
 
-const transportUrl = 'https://gateway.saxobank.com/sim/openapi';
+//const transportUrl = 'https://gateway.saxobank.com/sim/openapi';
+
+const transportUrl = 'https://www.saxotrader.com/sim/openapi';
 const streamingUrl = 'https://streaming.saxotrader.com/sim/openapi';
 
 let transport;

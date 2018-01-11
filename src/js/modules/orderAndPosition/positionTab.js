@@ -12,6 +12,17 @@ import PropTypes from 'prop-types';
 import OrdersAndPositionTableColumn from './components/ordersAndPositionTableColumn';
 
 export default function PositionTab(props) {
+
+// const totalCost = positionDetailPL.TotalCost;
+//         const totalCostInBaseCurrency = positionDetailPL.TotalCostInBaseCurrency;
+//         const conversionProfitLoss = positionDetailPL.ProfitLossCurrencyConversion || 0;
+
+//         const tradeProfitLoss = positionDetailPL.TradeProfitLoss || 0;
+//         const tradeProfitLossBaseCurrency = positionDetailPL.TradeProfitLossBaseCurrency || 0;
+//         const totalProfitLoss = tradeProfitLoss + totalCost;
+//         const totalProfitLossBaseCurrency = tradeProfitLossBaseCurrency + totalCostInBaseCurrency + conversionProfitLoss;
+
+    console.log(props);
     return (
         <View style={{ backgroundColor: '#444' }}>
             <PositionsTabHeader />
@@ -55,7 +66,7 @@ export default function PositionTab(props) {
                                     secondTextColor={secondTextColor}
                                 />
 
-                                <View style={{ flex: 2, alignItems: 'center', paddingRight: 10 }}>
+                                { /* <View style={{ flex: 2, alignItems: 'center', paddingRight: 10 }}>
                                     {value.SingleAndClosedPositions ? (value.SingleAndClosedPositions[0].PositionBase.Amount > 0 ?
                                         <OrdersAndPositionTableColumn
                                             data1={
@@ -85,11 +96,20 @@ export default function PositionTab(props) {
                                     ) :
                                         <OrdersAndPositionTableColumn
                                             data1={value.NetPositionView.CurrentPrice}
-                                            data2={value.NetPositionBase.OpenPrice}
+                                            data2={value.NetPositionView.AverageOpenPrice}
                                             numberOfTextData="2"
                                             flexNumber={1}
                                         />
                                     }
+                                </View> */ }
+
+                                <View style={{ flex: 2, alignItems: 'center', paddingRight: 10 }}>
+                                    <OrdersAndPositionTableColumn
+                                        data1={value.NetPositionView.CurrentPrice}
+                                        data2={value.NetPositionView.AverageOpenPrice}
+                                        numberOfTextData="2"
+                                        flexNumber={1}
+                                    />
                                 </View>
                             </View>
                         );
