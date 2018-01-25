@@ -21,7 +21,7 @@ function columnWithThreeData(props) {
                 </Text>
             </View>
         </View>
-    )
+    );
 }
 
 function columnWithTwoData(props) {

@@ -22,7 +22,7 @@ function showStockData(props) {
 
 function stockInfoForTwoColumns({ text, firstColData, secondColData }) {
     return (
-        <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
+        <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 1 }]}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={Stylesheet.searchInstrumentRowMinorText}>{firstColData}</Text>
                 <Text style={[text ? Stylesheet.smallWhiteText : Stylesheet.searchInstrumentRowMinorText, { fontSize: 11 }]}>{secondColData}</Text>

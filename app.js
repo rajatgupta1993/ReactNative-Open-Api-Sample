@@ -5,7 +5,7 @@ import AppNavigator from './src/js/modules/app/rootNavigator';
 
 export default function App() {
     return (
-        <View style={[Stylesheet.FlexOne]} >
+        <View style={Stylesheet.FlexOne} >
             <AppNavigator />
         </View>
     );

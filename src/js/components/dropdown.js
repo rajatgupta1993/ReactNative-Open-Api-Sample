@@ -8,7 +8,6 @@ import _ from 'lodash';
 function Dropdown({ data, title, id, itemKey, value, handleSelect, promptHeading }) {
 
     return (
-
         <Picker
             onValueChange={handleSelect}
             mode="dialog"

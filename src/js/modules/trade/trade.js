@@ -265,7 +265,7 @@ class Trade extends React.PureComponent {
                             />}
 
                         {/* Last Traded , Today's change Low/High*/}
-                        {(PriceInfo && PriceInfoDetails) && <View style={{ marginTop: 2 }}>
+                        {(PriceInfo && PriceInfoDetails) && <View style={{ marginTop: 1 }}>
                             <StockInfoRows length="3"
                                 firstColData={PriceInfoDetails.LastTraded}
                                 secondColData={`${roundUptoNDecimals(PriceInfo.NetChange, DisplayAndFormat.Decimals)}/${PriceInfo.PercentChange}%`}
@@ -290,7 +290,7 @@ class Trade extends React.PureComponent {
 
                         {/* Bid & Ask size*/}
 
-                        {(Quote && PriceInfoDetails) && <View style={{ marginTop: 2 }}>
+                        {(Quote && PriceInfoDetails) && <View style={{ marginTop: 4 }}>
                             <StockInfoRows length="4"
                                 firstColData="Size"
                                 secondColData="Bid"

@@ -1,7 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-console.log(width, height);
 
 const styles = StyleSheet.create({
 
@@ -51,6 +50,15 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 
+    textNDropdown: {
+        flexDirection: 'row',
+        height: 30,
+        padding: 0,
+        paddingHorizontal: 20,
+        marginTop: 5,
+        backgroundColor: '#000',
+    },
+
     h3: {
         fontSize: 18,
         fontWeight: '700',
@@ -81,7 +89,7 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         backgroundColor: '#444',
         paddingHorizontal: 20,
-        paddingVertical: 8,
+        paddingVertical: 6,
     },
 
     searchInstrumentRowMinorText: {
@@ -125,15 +133,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#c30101',
         height: 30,
-    },
-
-    textNDropdown: {
-        flexDirection: 'row',
-        height: 40,
-        padding: 0,
-        paddingHorizontal: 20,
-        marginTop: 5,
-        backgroundColor: '#000',
     },
 
 });

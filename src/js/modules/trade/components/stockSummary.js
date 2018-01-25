@@ -7,12 +7,11 @@ import { Icon } from 'native-base';
 import Stylesheet from '../../../../styles/styleSheet';
 import { string, object } from 'prop-types';
 
-// export default function StockSummary({ DisplayAndFormat, assetType }) {
 export default function StockSummary(props) {
 
     const { DisplayAndFormat, assetType, navigation } = props;
     return (
-        <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 2 }]}>
+        <View style={[Stylesheet.searchInstrumentRow, { flexDirection: 'row', backgroundColor: '#000', marginTop: 4 }]}>
             <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={[Stylesheet.smallWhiteText, { flex: 12 }]}

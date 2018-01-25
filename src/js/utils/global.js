@@ -18,7 +18,10 @@ export function checkIfPutCallExpiry(asset) {
 
 // This function is used to Round-off the number upto n decimal digits
 export function roundUptoNDecimals(num, decimal) {
-    return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+    if (!isNaN(num)) {
+        return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+    }
+
 }
 
 /* any async call can be made using this function and the loader toggle and network error handling

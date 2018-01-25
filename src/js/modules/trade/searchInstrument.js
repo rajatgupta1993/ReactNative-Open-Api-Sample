@@ -3,6 +3,8 @@ import {
     Text,
     View,
     ScrollView,
+    ListView,
+    StyleSheet,
 } from 'react-native';
 import { Container, Item, Input, Icon } from 'native-base';
 import * as queries from './queries';
@@ -17,9 +19,11 @@ class searchInstrument extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
             searchTerm: '',
             instrumentSearchResult: [],
+            dataSource: ds.cloneWithRows([]),
         };
     }
 
@@ -31,6 +35,7 @@ class searchInstrument extends React.PureComponent {
             queries.fetchInstrumentsByKeyword(text, this.props, (response) => {
                 this.setState({
                     instrumentSearchResult: response.Data,
+                    dataSource: this.state.dataSource.cloneWithRows(response.Data),
                 });
             });
         }
@@ -63,7 +68,7 @@ class searchInstrument extends React.PureComponent {
                         color="#1E90FF"
                         size="large"
                     />)}
-                <ScrollView style={{ flex: 1 }}>
+                { /* <ScrollView style={{ flex: 1 }}>
                     {(this.state.instrumentSearchResult.length !== 0) ? (
                         <View style={{ flex: 1 }}>
                             <InstrumentRow
@@ -75,9 +80,30 @@ class searchInstrument extends React.PureComponent {
                             <Icon name="md-search" style={{ color: '#fff' }} />
                             <Text style={{ fontSize: 16, fontFamily: 'roboto', color: '#fff' }}>
                                 Find Instrument
-                             </Text>
+                            </Text>
                         </View>)}
-                </ScrollView>
+                </ScrollView>*/ }
+
+                {(this.state.instrumentSearchResult.length !== 0) ? (
+                    <ListView
+                        style={{ flex: 1 }}
+                        dataSource={this.state.dataSource}
+                        renderRow={() => (<InstrumentRow
+                            {...this.props}
+                            data={this.state.instrumentSearchResult}
+                        />)}
+                        renderSeparator={(sectionId, rowId) => (
+                            <View key={rowId}
+                                style={{ flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: '#8E8E8E' }} />
+                        )}
+                    />) :
+                    (<View style={Stylesheet.searchInstrumentDefaultView}>
+                        <Icon name="md-search" style={{ color: '#fff' }} />
+                        <Text style={{ fontSize: 16, fontFamily: 'roboto', color: '#fff' }}>
+                                Find Instrument
+                        </Text>
+                    </View>)}
+
             </Container>
 
         );

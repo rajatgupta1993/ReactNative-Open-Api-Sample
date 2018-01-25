@@ -374,7 +374,7 @@
             }
         ],
         "no-multi-assign": "off",
-        "no-negated-condition": "error",
+        "no-negated-condition": "off",
        // "no-nested-ternary": "error",
         "no-new-object": "error",
         "no-plusplus": "off",

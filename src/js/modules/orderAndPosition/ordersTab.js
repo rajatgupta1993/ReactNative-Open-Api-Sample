@@ -24,10 +24,8 @@ export default function OrdersTab(props) {
             )}
 
             {!_.isEmpty(props.trades) &&
-            <ScrollView >
-
-                {_.map(props.trades, (value, key) => {
-                    return (
+                <ScrollView >
+                    {_.map(props.trades, (value, key) => (
                         value && <View key={key} style={Stylesheet.ordersTabRow}>
                             <OrdersAndPositionTableColumn
                                 data1={value.DisplayAndFormat.Description}
@@ -53,14 +51,16 @@ export default function OrdersTab(props) {
                             />
 
                         </View>
-                    );
+                    )
+                    )}
+                </ScrollView>}
 
-                })}
-            </ScrollView>}
 
         </View>
     );
 }
+
+
 
 OrdersTab.propTypes = {
     isLoading: PropTypes.bool,
